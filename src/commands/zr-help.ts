@@ -26,8 +26,19 @@ export class HelpCommand extends AbstractCommand {
             )
         );
 
+        if (args.length == 1) {
+            let files = await promisify(fs.readdir)(__dirname);
+            let command = this.config.alias[args[0]] || args[0];
+            let moduleFile = files.find(f => f == ("zr-" + command + ".js"));
+            if (moduleFile) {
+                let module = (require(__dirname + '/' + moduleFile) as any).default as Command;
+                await module.ShowHelp(options, ...args.slice(1));
+                return 0;
+            }
+        }
+
         console.log(chalk.white.bold('Commands'))
-        let files = await promisify(fs.readdir)(sprintf(__dirname));
+        let files = await promisify(fs.readdir)(__dirname);
         files.forEach(f => {
             if (f.startsWith('zr') && f.endsWith('.js')) {
                 console.log(sprintf(

@@ -43,6 +43,5 @@ export default abstract class AbstractCommand implements Command {
         return this.Run(argOptions, ...args);
     }
 
-    abstract ShowHelp(argOptions: any, ...args: string[]): Promise<number>;
     abstract Run(argOptions: any, ...args: string[]): Promise<number>;
 }
