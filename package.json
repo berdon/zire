@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "./out/index.js",
-  "bin":{
+  "bin": {
     "zr": "./out/index.js"
   },
   "scripts": {
@@ -24,10 +24,12 @@
     "jira-client": "^6.4.0",
     "lodash": "^4.17.4",
     "minimist": "^1.2.0",
+    "object-path": "^0.11.4",
     "preferences": "^0.2.1",
     "request": "^2.83.0",
     "simple-git": "^1.80.1",
     "sprintfjs": "^1.2.6",
-    "touch": "^3.1.0"
+    "touch": "^3.1.0",
+    "typed-promisify": "^0.4.0"
   }
 }
