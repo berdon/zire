@@ -102,7 +102,7 @@ async function main() {
     let moduleFile = files.find(f => f == ("zr-" + command + ".js"));
     if (moduleFile) {
         let module = (require('./commands/' + moduleFile) as any).default as Command;
-        module.Execute(jira, prefs.current_user, prefs, argv, ...argv._.slice(1));
+        await module.Execute(jira, prefs.current_user, prefs, argv, ...argv._.slice(1));
         console.log('');
         return 0;
     }
