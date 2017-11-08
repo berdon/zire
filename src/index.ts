@@ -23,7 +23,7 @@ function getJiraCredentials(): Promise<inquirer.Answers> {
         {
             name: 'username',
             type: 'input',
-            message: 'Enter your Github username or e-mail address:',
+            message: 'Enter your Jira:',
             validate: (value: string) => {
                 if (value.length) {
                     return true;
