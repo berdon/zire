@@ -64,7 +64,9 @@ async function main() {
             alias: {
                 co: 'checkout',
                 st: 'status',
-                ls: 'list'
+                ls: 'list',
+                log: 'comment',
+                lg: 'comment'
             }
         };
     }
