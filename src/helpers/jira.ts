@@ -63,6 +63,10 @@ export async function transition_issue(jira : any, issue : any) : Promise<void> 
         }
     }
 
+    if (data.fields.length == 0) {
+        delete data.fields;
+    }
+
     if (commentResults.comments && commentResults.comments != '') {
         data['update'] = {
             comment: [{
@@ -73,11 +77,7 @@ export async function transition_issue(jira : any, issue : any) : Promise<void> 
         }
     }
 
-    console.log(data);
-
-    return;
-
-    await jira.transitionIssue(issue.id, { transition: { id: result.transition }});
+    await jira.transitionIssue(issue.id, data);
 }
 
 function inquirerTypeFromJiraType(type : string) : { type : string, option : string } {
@@ -102,8 +102,24 @@ function inquirerTypeFromJiraType(type : string) : { type : string, option : str
 
 export function chalkForStatus(issue : any) : (...text : string[]) => string {
     switch(issue.fields.status.name) {
+        case 'Open':
         case 'Ready':
+            return chalk.cyan;
+        case 'In Progress':
             return chalk.green;
+        case 'Code Review':
+            return chalk.blue;
+        case 'Awaiting QA':
+            return chalk.magenta;
+        case 'QA Complete':
+        case 'Not Repro No Dev':
+            return chalk.grey;
+        case 'Awaiting Deploy':
+            return chalk.yellow;
+        case 'Closed':
+            return chalk.grey;
+        case 'Kicked Back':
+            return chalk.red;
     }
 
     return (text) => { return text };

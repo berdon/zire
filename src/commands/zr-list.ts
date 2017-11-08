@@ -16,7 +16,7 @@ import Git from "../lib/git";
 export class ListCommand extends AbstractCommand {
     async ShowHelp(argOptions: any, ...args: string[]): Promise<number> {
         console.log('Lists the issues currently assigned to you.')
-        console.log('\t' + chalk.white('zr list ' + chalk.grey('[-d|--debug] [-h|--help]')));
+        console.log('\t' + chalk.white('zr list ' + chalk.grey('[-a|-all] [-d|--debug] [-h|--help]')));
         console.log();
         console.log(chalk.bold('Flags'));
         console.log(sprintf(
@@ -30,21 +30,32 @@ export class ListCommand extends AbstractCommand {
     }
 
     async Run(options : any, ...args: string[]): Promise<number> {
-        await this.display_issues(options.d || options.debug)        
+        await this.display_issues(options.a || options.all, options.d || options.debug)        
 
         return 0;
     }
 
-    private async display_issues(debug : boolean = false) : Promise<any> {
-        let query = await this.jira.searchJira(
-            "project = FO AND assignee = '" + this.user.name + "' AND status not in (Open, Closed) ORDER BY Rank ASC");
+    private async display_issues(all : boolean = false, debug : boolean = false) : Promise<any> {
+        let query : any;
+        if (all) {
+            query = await this.jira.searchJira("project = FO ORDER BY Rank ASC");
+        } else {
+            query = await this.jira.searchJira(
+                "project = FO AND assignee = '" + this.user.name + "' AND status not in (Open, Closed) ORDER BY Rank ASC");
+        }
         query.issues.forEach(async issue => {
             console.log(
-                sprintf("(" + chalkForStatus(issue)("%-12s") +") [%s] %s",
-                    issue.fields.status.name,
-                    chalk.bold.white(issue.key),
-                    chalk.bold.white(issue.fields.summary))
+                sprintf("(%s) [%s] %s %s",
+                    sprintf(chalkForStatus(issue)("%-12s"), issue.fields.status.name),
+                    sprintf(chalk.bold.white('%-8s'), issue.key),
+                    sprintf(
+                        chalk.bold.cyan('@%-8s'),
+                        issue.fields.assignee.name.substr(
+                            0,
+                            Math.min(8, issue.fields.assignee.name.length))),
+                    sprintf(chalk.bold.white('%s'), issue.fields.summary))
             )
+
             if (debug) {
                 console.log(sprintf("\tID: %s", chalk.grey(issue.id)))
             }

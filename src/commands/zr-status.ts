@@ -30,12 +30,14 @@ export class StatusCommand extends AbstractCommand {
             console.log(chalk.yellow("No active issue. Mark one with zire co <issue>"));
             return -1;
         }
+
+        let issue = await this.jira.findIssue(this.active_issue.id);
     
         console.log(
-            sprintf("(" + chalkForStatus(this.active_issue)("%-12s") +") [%s] %s",
-                this.active_issue.fields.status.name,
-                chalk.bold.white(this.active_issue.key),
-                chalk.bold.white(this.active_issue.fields.summary))
+            sprintf("(" + chalkForStatus(issue)("%-12s") +") [%s] %s",
+                issue.fields.status.name,
+                chalk.bold.white(issue.key),
+                chalk.bold.white(issue.fields.summary))
         )
 
         return 0;
