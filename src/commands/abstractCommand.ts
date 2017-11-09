@@ -12,6 +12,7 @@ import { Command } from "../interfaces";
 export default abstract class AbstractCommand implements Command {
     protected jira : any;
     protected user : any;
+    protected globalPrefs : preferences;
     protected prefs : preferences;
 
     protected get hasActiveIssue(): boolean {
@@ -31,9 +32,10 @@ export default abstract class AbstractCommand implements Command {
         return this.prefs.config;
     }
 
-    execute(jira: any, user: any, prefs: any, argOptions : any, ...args: string[]): Promise<number> {
+    execute(jira: any, user: any, globalPrefs : preferences, prefs: any, argOptions : any, ...args: string[]): Promise<number> {
         this.jira = jira;
         this.user = user;
+        this.globalPrefs = globalPrefs;
         this.prefs = prefs;
 
         if (argOptions.help) {

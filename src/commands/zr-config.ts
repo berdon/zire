@@ -41,6 +41,8 @@ export class ConfigCommand extends AbstractCommand {
     }
 
     async run(options : any, ...args: string[]): Promise<number> {
+        let config = (options.g || options.global) ? this.globalPrefs.config : this.prefs.config;
+
         if (options.u || options.unset) {
             if ((options.u || options.unset) === true) {
                 console.log(chalk.yellow('Unset what?'))
@@ -57,7 +59,7 @@ export class ConfigCommand extends AbstractCommand {
                 if (element == 'alias') return;
 
                 console.log(chalk.red(sprintf("Deleting %s", chalk.bold(element))));
-                objectPath.del(this.config, element);
+                objectPath.del(config, element);
             });
 
             return 0;
@@ -75,13 +77,13 @@ export class ConfigCommand extends AbstractCommand {
                 }
             }
 
-            Object.keys(this.config).forEach(element => displayObject(element, this.config[element]));
+            Object.keys(config).forEach(element => displayObject(element, config[element]));
             return 0;
         }
 
         if (args.length == 2) {
             console.log(sprintf("%s => %s", chalk.white(args[0]), chalk.white.bold(args[1])));
-            objectPath.set(this.config, args[0], args[1]);
+            objectPath.set(config, args[0], args[1]);
             return 0;
         }
 

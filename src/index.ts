@@ -13,6 +13,7 @@ let sprintf = require("sprintfjs");
 let jiraClient = require("jira-client");
 import Git from "./lib/git";
 import { promisify } from 'typed-promisify';
+import * as path from 'path';
 
 import * as files from './lib/files';
 import { Command } from "./interfaces";
@@ -49,7 +50,14 @@ function getJiraCredentials(): Promise<inquirer.Answers> {
     return inquirer.prompt(questions);
 }
 
-let prefs = new preferences('zire');
+let globalPrefs = new preferences('zire', { config: { alias: {} } });
+var cwd = path.dirname(process.cwd());
+let prefs = new preferences(cwd, { config: { alias: {} } },
+    {
+        file: path.join(cwd, '.zire'),
+        format: 'yaml'
+    }
+);
 let git = new Git('./');
 
 async function main() {
@@ -59,8 +67,8 @@ async function main() {
     //     )
     // );
 
-    if (!prefs.config) {
-        prefs.config = {
+    if (!globalPrefs.config) {
+        globalPrefs.config = {
             alias: {
                 co: 'checkout',
                 st: 'status',
@@ -70,24 +78,24 @@ async function main() {
             }
         };
     }
-    if (!prefs.config.alias) prefs.config.alias = {};
+    if (!globalPrefs.config.alias) globalPrefs.config.alias = {};
 
-    if (!prefs.jira || !prefs.jira.username || !prefs.jira.password) {
+    if (!globalPrefs.jira || !globalPrefs.jira.username || !globalPrefs.jira.password) {
         let results = await getJiraCredentials();
-        prefs.jira = results;
+        globalPrefs.jira = results;
     }
 
     let jira = new jiraClient({
         protocol: "https",
         host: "jira.zuerchertech.com",
-        username: prefs.jira.username,
-        password: prefs.jira.password,
+        username: globalPrefs.jira.username,
+        password: globalPrefs.jira.password,
         apiVersion: "2",
         strictSSL: true
     });
 
-    if (!prefs.current_user) {
-        prefs.current_user = await jira.getCurrentUser();
+    if (!globalPrefs.current_user) {
+        globalPrefs.current_user = await jira.getCurrentUser();
     }
 
     let argv = require('minimist')(process.argv.slice(2));
@@ -100,11 +108,11 @@ async function main() {
     // Command arbitration
     // 1. Check the internal commands directory
     let files = await promisify(fs.readdir)(sprintf("%s/commands", __dirname));
-    let command = prefs.config.alias[argv._[0]] || argv._[0]
+    let command = globalPrefs.config.alias[argv._[0]] || argv._[0]
     let moduleFile = files.find(f => f == ("zr-" + command + ".js"));
     if (moduleFile) {
         let module = (require('./commands/' + moduleFile) as any).default as Command;
-        await module.execute(jira, prefs.current_user, prefs, argv, ...argv._.slice(1));
+        await module.execute(jira, globalPrefs.current_user, globalPrefs, prefs, argv, ...argv._.slice(1));
         console.log('');
         return 0;
     }
