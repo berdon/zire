@@ -16,7 +16,7 @@ import { promisify } from 'typed-promisify';
 
 import * as files from './lib/files';
 import { Command } from "./interfaces";
-import { transition_issue } from "./helpers/jira";
+import { transitionIssue } from "./helpers/jira";
 
 function getJiraCredentials(): Promise<inquirer.Answers> {
     var questions = [
@@ -100,11 +100,11 @@ async function main() {
     // Command arbitration
     // 1. Check the internal commands directory
     let files = await promisify(fs.readdir)(sprintf("%s/commands", __dirname));
-    let command = prefs.config.alias[argv._[0]] || argv._[0];
+    let command = prefs.config.alias[argv._[0]] || argv._[0]
     let moduleFile = files.find(f => f == ("zr-" + command + ".js"));
     if (moduleFile) {
         let module = (require('./commands/' + moduleFile) as any).default as Command;
-        await module.Execute(jira, prefs.current_user, prefs, argv, ...argv._.slice(1));
+        await module.execute(jira, prefs.current_user, prefs, argv, ...argv._.slice(1));
         console.log('');
         return 0;
     }
@@ -115,4 +115,6 @@ async function main() {
     return 1;
 }
 
-main().catch((reason) => { throw reason });
+main().catch((reason) => {
+    console.log(chalk.red(reason.stack));
+});

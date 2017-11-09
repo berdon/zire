@@ -15,11 +15,11 @@ import AbstractCommand from './abstractCommand';
 import { promisify } from 'typed-promisify';
 
 export class HelpCommand extends AbstractCommand {
-    async ShowHelp(argOptions: any, ...args: string[]): Promise<number> {
-        return this.Run(argOptions, ...args);
+    async showHelp(argOptions: any, ...args: string[]): Promise<number> {
+        return this.run(argOptions, ...args);
     }
 
-    async Run(options : any, ...args: string[]): Promise<number> {
+    async run(options : any, ...args: string[]): Promise<number> {
         console.log(
             chalk.yellow(
                 figlet.textSync('Zire', { horizontalLayout: 'full' })
@@ -32,7 +32,7 @@ export class HelpCommand extends AbstractCommand {
             let moduleFile = files.find(f => f == ("zr-" + command + ".js"));
             if (moduleFile) {
                 let module = (require(__dirname + '/' + moduleFile) as any).default as Command;
-                await module.ShowHelp(options, ...args.slice(1));
+                await module.showHelp(options, ...args.slice(1));
                 return 0;
             }
         }

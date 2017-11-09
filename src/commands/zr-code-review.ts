@@ -12,11 +12,11 @@ import { Command } from "../interfaces";
 import AbstractCommand from './abstractCommand';
 
 export class CodeReviewCommand extends AbstractCommand {
-    async ShowHelp(argOptions: any, ...args: string[]): Promise<number> {
+    async showHelp(argOptions: any, ...args: string[]): Promise<number> {
         return 0;
     }
 
-    async Run(options : any, ...args: string[]): Promise<number> {
+    async run(options : any, ...args: string[]): Promise<number> {
         return 0;
     }
 }

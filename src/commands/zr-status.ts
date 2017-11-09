@@ -13,7 +13,7 @@ import { chalkForStatus } from '../helpers/jira';
 import AbstractCommand from './abstractCommand';
 
 export class StatusCommand extends AbstractCommand {
-    async ShowHelp(argOptions: any, ...args: string[]): Promise<number> {
+    async showHelp(argOptions: any, ...args: string[]): Promise<number> {
         console.log('Shows the status of your zire.')
         console.log('\t' + chalk.white('zr status ') + chalk.grey('[-h|--help]'));
         console.log();
@@ -25,13 +25,13 @@ export class StatusCommand extends AbstractCommand {
         return 0;
     }
 
-    async Run(options : any, ...args: string[]): Promise<number> {
-        if (!this.active_issue) {
+    async run(options : any, ...args: string[]): Promise<number> {
+        if (!this.activeIssue) {
             console.log(chalk.yellow("No active issue. Mark one with zire co <issue>"));
             return -1;
         }
 
-        let issue = await this.jira.findIssue(this.active_issue.id);
+        let issue = await this.jira.findIssue(this.activeIssue.id);
     
         console.log(
             sprintf("(" + chalkForStatus(issue)("%-12s") +") [%s] %s",

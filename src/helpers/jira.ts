@@ -7,7 +7,7 @@ import chalk from 'chalk';
 
 /*** Local Modules ***/
 
-export async function transition_issue(jira : any, issue : any) : Promise<void> {
+export async function transitionIssue(jira : any, issue : any) : Promise<void> {
     let transitions = await jira.listTransitions(issue.id);
     let states = transitions.transitions
         .map(t => {

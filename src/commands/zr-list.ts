@@ -10,11 +10,11 @@ import preferences from 'preferences';
 /*** Local Modules ***/
 import { Command } from "../interfaces";
 import AbstractCommand from './abstractCommand';
-import { transition_issue, chalkForStatus } from '../helpers/jira';
+import { transitionIssue, chalkForStatus } from '../helpers/jira';
 import Git from "../lib/git";
 
 export class ListCommand extends AbstractCommand {
-    async ShowHelp(argOptions: any, ...args: string[]): Promise<number> {
+    async showHelp(argOptions: any, ...args: string[]): Promise<number> {
         console.log('Lists the issues currently assigned to you.')
         console.log('\t' + chalk.white('zr list ' + chalk.grey('[-a|-all] [-d|--debug] [-h|--help]')));
         console.log();
@@ -29,7 +29,7 @@ export class ListCommand extends AbstractCommand {
         return 0;
     }
 
-    async Run(options : any, ...args: string[]): Promise<number> {
+    async run(options : any, ...args: string[]): Promise<number> {
         await this.display_issues(options.a || options.all, options.d || options.debug)        
 
         return 0;

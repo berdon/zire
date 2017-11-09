@@ -13,11 +13,11 @@ import { Command } from "../interfaces";
 import AbstractCommand from './abstractCommand';
 
 export class OpenCommand extends AbstractCommand {
-    async ShowHelp(argOptions: any, ...args: string[]): Promise<number> {
+    async showHelp(argOptions: any, ...args: string[]): Promise<number> {
         return 0;
     }
 
-    async Run(options : any, ...args: string[]): Promise<number> {
+    async run(options : any, ...args: string[]): Promise<number> {
         let issue = await this.jira.findIssue(args[0]);
         let link = sprintf('https://jira.zuerchertech.com/browse/%s', issue.key);
 

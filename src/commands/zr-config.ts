@@ -14,7 +14,7 @@ import { chalkForStatus } from '../helpers/jira';
 import AbstractCommand from './abstractCommand';
 
 export class ConfigCommand extends AbstractCommand {
-    async ShowHelp(argOptions: any, ...args: string[]): Promise<number> {
+    async showHelp(argOptions: any, ...args: string[]): Promise<number> {
         console.log('Configures zire.')
         console.log('\t' + chalk.white('zr config ') + chalk.grey('[--help]'));
         console.log('\t' + chalk.white('zr config ') + chalk.yellow.bold('<key> <value>'));
@@ -40,7 +40,7 @@ export class ConfigCommand extends AbstractCommand {
         return 0;
     }
 
-    async Run(options : any, ...args: string[]): Promise<number> {
+    async run(options : any, ...args: string[]): Promise<number> {
         if (options.u || options.unset) {
             if ((options.u || options.unset) === true) {
                 console.log(chalk.yellow('Unset what?'))

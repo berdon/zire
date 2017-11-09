@@ -13,12 +13,12 @@ import { Command } from "../interfaces";
 import AbstractCommand from './abstractCommand';
 
 export class CommentCommand extends AbstractCommand {
-    async ShowHelp(argOptions: any, ...args: string[]): Promise<number> {
+    async showHelp(argOptions: any, ...args: string[]): Promise<number> {
         return 0;
     }
 
-    async Run(options : any, ...args: string[]): Promise<number> {
-        let issue = args.length == 0 ? this.active_issue : await this.jira.findIssue(args[0]);
+    async run(options : any, ...args: string[]): Promise<number> {
+        let issue = args.length == 0 ? this.activeIssue : await this.jira.findIssue(args[0]);
 
         var commentResults = await inquirer.prompt({
             type: 'editor',
